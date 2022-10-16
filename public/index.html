@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <link rel="icon" href="data:,">
+</head>
+<body>
+<form id="uploadForm">
+  <div>
+    <label>Select a file to upload</label>
+    <input name="file" type="file">
+  </div>
+  <button type="submit">Upload</button>
+</form>
+
+<hr>
+
+<form id="downloadForm">
+  <div>
+    <label>Enter ID of file to download</label>
+    <input name="id" type="text">
+  </div>
+  <button type="submit">Download</button>
+</form>
+
+<script>
+  const uForm = document.getElementById("uploadForm");
+
+  uForm.addEventListener('submit', event => {
+    event.preventDefault();
+    const formData = new FormData(uForm);
+    console.log(formData.keys());
+
+    fetch('http://127.0.0.1:8787', {
+      method: 'PUT',
+      // headers: {
+      //   'Content-Type': 'multipart/form-data'
+      // },
+      body: formData
+    })
+        .then((response) => response.json())
+        .then((result) => {
+          console.log('Success:', result);
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+
+  });
+
+  const dForm = document.getElementById("downloadForm");
+
+  dForm.addEventListener('submit', event => {
+    event.preventDefault();
+    const formData = new FormData(dForm);
+    console.log(formData.get('id'));
+
+    fetch(`http://127.0.0.1:8787/${formData.get('id')}`)
+        .then((response) => console.log(response))
+        .then((blob) => {
+          console.log(blob);
+          let a = document.createElement('a');
+          a.href = window.URL.createObjectURL(blob);
+          a.download = "FILENAME";
+          a.click();
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+
+  });
+</script>
+</body>
+</html>
