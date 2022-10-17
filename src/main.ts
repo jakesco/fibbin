@@ -1,3 +1,8 @@
+// @ts-ignore
+import Alpine from 'alpinejs';
 import './styles.css';
 
-console.log("Hello, world!");
+// @ts-ignore
+window.Alpine = Alpine;
+
+Alpine.start();

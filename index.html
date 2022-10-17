@@ -5,21 +5,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- Ignore Favicon -->
-  <link rel="icon" href="data:,">
-
+  <link rel="icon" href="data:,"> <!-- Ignore Favicon -->
   <link rel="stylesheet" href="src/styles.css">
-
   <script type="module" src="/src/main.ts" defer></script>
 
   <title>Fibbin</title>
-
 </head>
 
 <body>
-
-<section>
-  <h1>Welcome to Fibbin</h1>
+<section x-data="{header: 'Fibbin'}">
+  <h1>Welcome to <span x-text="header"></span></h1>
   <form id="uploadForm">
     <div>
       <label>Select a file to upload</label>
@@ -37,56 +32,6 @@
     </div>
     <button type="submit">Download</button>
   </form>
-
 </section>
-
-<script>
-  const uForm = document.getElementById("uploadForm");
-
-  uForm.addEventListener('submit', event => {
-    event.preventDefault();
-    const formData = new FormData(uForm);
-    console.log(formData.keys());
-
-    fetch('127.0.0.1:8787', {
-      method: 'PUT',
-      // headers: {
-      //   'Content-Type': 'multipart/form-data'
-      // },
-      body: formData
-    })
-            .then((response) => response.json())
-            .then((result) => {
-              console.log('Success:', result);
-            })
-            .catch((error) => {
-              console.error('Error:', error);
-            });
-
-  });
-
-  const dForm = document.getElementById("downloadForm");
-
-  dForm.addEventListener('submit', event => {
-    event.preventDefault();
-    const formData = new FormData(dForm);
-    console.log(formData.get('id'));
-
-    fetch(`http://127.0.0.1:8787/${formData.get('id')}`)
-            .then((response) => console.log(response))
-            .then((blob) => {
-              console.log(blob);
-              let a = document.createElement('a');
-              a.href = window.URL.createObjectURL(blob);
-              a.download = "FILENAME";
-              a.click();
-            })
-            .catch((error) => {
-              console.error('Error:', error);
-            });
-
-  });
-</script>
-
 </body>
 </html>
