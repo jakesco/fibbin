@@ -6,32 +6,74 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <link rel="icon" href="data:,"> <!-- Ignore Favicon -->
-  <link rel="stylesheet" href="src/styles.css">
-  <script type="module" src="/src/main.ts" defer></script>
+  <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css">
+  <script src="https://unpkg.com/alpinejs@3.10.4/dist/cdn.min.js" defer></script>
 
   <title>Fibbin</title>
 </head>
 
 <body>
-<section x-data="{header: 'Fibbin'}">
-  <h1>Welcome to <span x-text="header"></span></h1>
-  <form id="uploadForm">
-    <div>
-      <label>Select a file to upload</label>
-      <input name="file" type="file">
-    </div>
-    <button type="submit">Upload</button>
-  </form>
+<main class="container">
+  <hgroup>
+    <h1>Welcome to Fibbin</h1>
+    <h2>Upload a file and get a link to share with anyone.</h2>
+  </hgroup>
 
-  <hr>
+  <article x-data x-show="$store.link.url === undefined">
+    <h3>Select a file to upload</h3>
+    <form id="uploadForm" enctype="multipart/form-data" x-data @submit.prevent @submit="uploadFile()">
+      <div>
+        <input name="file" type="file">
+      </div>
+      <button type="submit">Upload</button>
+    </form>
+  </article>
 
-  <form id="downloadForm">
-    <div>
-      <label>Enter ID of file to download</label>
-      <input name="id" type="text">
+  <article x-cloak x-data="{'copied': false}" x-show="$store.link.url !== undefined" x-transition>
+    <p>Your file will be available at the following url. Files are automatically deleted after 1 hour.</p>
+    <input id="fileLink" type="text" :value="$store.link.url" readonly>
+    <div class="grid">
+      <button @click="copyLink(); copied = true; setTimeout(() => copied = false, 3000)">Copy Link</button>
+      <button @click="$store.link.url = undefined" class="contrast outline">Upload another file</button>
     </div>
-    <button type="submit">Download</button>
-  </form>
-</section>
+    <div x-show="copied" x-transition.opacity>
+      <ins class="message">Link copied to clipboard!</ins>
+    </div>
+  </article>
+</main>
+
+<script>
+  document.addEventListener('alpine:init', () => {
+    Alpine.store('link', {
+      url: undefined
+    })
+  });
+
+  function uploadFile() {
+    const form = document.getElementById('uploadForm');
+    const formData = new FormData(form)
+
+    fetch("./api/upload", {
+      method: 'PUT',
+      body: formData
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        Alpine.store('link').url = window.location.origin + '/' + result.url;
+      })
+      .catch((error) => {
+        alert("File upload failed.");
+        console.error('Error:', error);
+      })
+
+  }
+
+  function copyLink() {
+    const linkText = document.getElementById('fileLink');
+    linkText.select()
+    linkText.setSelectionRange(0, 999999);
+    navigator.clipboard.writeText(linkText.value);
+  }
+</script>
 </body>
 </html>

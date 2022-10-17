@@ -1,31 +1,50 @@
+// Contents of context object
+// const {
+//   request: Request, // same as existing Worker API
+//   env: Env,
+//   params, // if filename includes [id] or [[path]]
+//   waitUntil, // same as ctx.waitUntil in existing Worker API
+//   next, // used for middleware or to fetch assets
+//   data, // arbitrary space for passing data between middlewares
+// } = context;
+
 import { v4 as uuidv4 } from 'uuid';
 
-interface FileMetaData {
-	filename: string,
-	content_type: string,
-	ttl: number,
+interface FileMetadata {
+    created_at: Date;
+    expires: Date;
+    name: string;
+    type: string;
+    size: number;
 }
 
-export interface Env {
-	STORE: KVNamespace;
-	BUCKET: R2Bucket;
+interface env {
+    STORE: KVNamespace;
+    BUCKET: R2Bucket;
 }
 
 export async function onRequestPost(context: any) {
-  // Contents of context object
-  const {
-    request: Request, // same as existing Worker API
-    env: Env,
-    params, // if filename includes [id] or [[path]]
-    waitUntil, // same as ctx.waitUntil in existing Worker API
-    next, // used for middleware or to fetch assets
-    data, // arbitrary space for passing data between middlewares
-  } = context;
+    const env: env = context.env;
 
-  const key = uuidv4();
+    const formData = await context.request.formData();
+    const file = formData.get('file');
 
-  return new Response(`Upload API endpoint. New file ID ${key}`);
+    let now = new Date();
+
+    const key = uuidv4();
+    const meta_data: FileMetadata = {
+        created_at: now,
+        expires: new Date(now.getTime() + 6 * 60 * 60 * 1000),
+        name: file.name,
+        type: file.type,
+        size: file.size
+    };
+    console.log(meta_data);
+
+    await env.STORE.put(key, JSON.stringify(meta_data));
+    await env.BUCKET.put(key, file);
+
+    return new Response(JSON.stringify({"url": key}));
 }
 
 export const onRequestPut = onRequestPost;
-export const onRequestGet = onRequestPost;

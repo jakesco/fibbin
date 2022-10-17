@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "tsc && vite build && wrangler pages dev --local dist --kv=STORE --r2=BUCKET"
+    "preview": "tsc && vite build && wrangler pages dev dist --kv=STORE --r2=BUCKET"
   },
   "dependencies": {
     "alpinejs": "^3.10.4",
