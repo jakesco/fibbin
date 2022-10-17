@@ -75,11 +75,10 @@ function html_404(id: string) {
 export async function onRequestGet(context: any) {
     const key = context.params.id;
     const env: Env = context.env;
-    const meta_response = await env.STORE.get(key);
+    const meta_response: FileMetadata | null = await env.STORE.get(key, { type: "json"});
 
     if (meta_response) {
-        const meta_data: FileMetadata = JSON.parse(meta_response);
-        const html = html_bucket(key, meta_data.name, new Date(meta_data.expires).toTimeString());
+        const html = html_bucket(key, meta_response.name, new Date(meta_response.expires).toTimeString());
         return new Response(html, {
             headers: {
                 'Content-Type': 'text/html;charset=UTF-8',

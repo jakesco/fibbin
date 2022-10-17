@@ -39,9 +39,10 @@ export async function onRequestPost(context: any) {
         type: file.type,
         size: file.size
     };
-    console.log(meta_data);
+    const value = JSON.stringify(meta_data);
+    console.log(value);
 
-    await env.STORE.put(key, JSON.stringify(meta_data));
+    await env.STORE.put(key, value);
     await env.BUCKET.put(key, file);
 
     return new Response(JSON.stringify({"url": key}));
