@@ -7,7 +7,7 @@
   },
   "scripts": {
     "serve": "python -m http.server --directory=public/ 3000",
-    "preview": "npx wrangler pages dev public --kv=KV_FIBBIN --r2=R2_FIBBIN"
+    "preview": "npx wrangler pages dev public --kv=STORE --r2=BUCKET"
   },
   "dependencies": {
     "uuid": "^9.0.0"

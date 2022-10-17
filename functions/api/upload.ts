@@ -7,11 +7,11 @@ interface FileMetaData {
 }
 
 export interface Env {
-	KV_FIBBIN: KVNamespace;
-	R2_FIBBIN: R2Bucket;
+	STORE: KVNamespace;
+	BUCKET: R2Bucket;
 }
 
-export async function onRequest(context: any) {
+export async function onRequestPost(context: any) {
   // Contents of context object
   const {
     request: Request, // same as existing Worker API
@@ -22,5 +22,10 @@ export async function onRequest(context: any) {
     data, // arbitrary space for passing data between middlewares
   } = context;
 
-  return new Response("Hello, world!");
+  const key = uuidv4();
+
+  return new Response(`Upload API endpoint. New file ID ${key}`);
 }
+
+export const onRequestPut = onRequestPost;
+export const onRequestGet = onRequestPost;
