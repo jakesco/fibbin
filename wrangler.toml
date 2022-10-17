@@ -1,15 +1,2 @@
-name = "fibbin"
-main = "src/index.ts"
 compatibility_date = "2022-10-16"
-
-workers_dev = true
-
-[[kv_namespaces]]
-binding = "KV_STORE"
-id = "c34f664da0d3418ca7ad05685dbad81e"
-preview_id = '00acc8b3d26c41a5b5a169509028c058'
-
-[[r2_buckets]]
-binding = 'FIBBIN_BUCKET'
-bucket_name = 'fibbin'
-preview_bucket_name = 'fibbin-dev'
+compatibility_flags = [ "formdata_parser_supports_files" ]

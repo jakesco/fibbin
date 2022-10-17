@@ -1,28 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <title>Title</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Ignore Favicon -->
   <link rel="icon" href="data:,">
+
+  <link rel="stylesheet" href="styles.css">
+
+  <script defer src="https://unpkg.com/alpinejs@3.10.4/dist/cdn.min.js"></script>
+
+  <title>Fibbin</title>
+
 </head>
+
 <body>
-<form id="uploadForm">
-  <div>
-    <label>Select a file to upload</label>
-    <input name="file" type="file">
-  </div>
-  <button type="submit">Upload</button>
-</form>
 
-<hr>
+<section>
+  <form id="uploadForm">
+    <div>
+      <label>Select a file to upload</label>
+      <input name="file" type="file">
+    </div>
+    <button type="submit">Upload</button>
+  </form>
 
-<form id="downloadForm">
-  <div>
-    <label>Enter ID of file to download</label>
-    <input name="id" type="text">
-  </div>
-  <button type="submit">Download</button>
-</form>
+  <hr>
+
+  <form id="downloadForm">
+    <div>
+      <label>Enter ID of file to download</label>
+      <input name="id" type="text">
+    </div>
+    <button type="submit">Download</button>
+  </form>
+
+</section>
 
 <script>
   const uForm = document.getElementById("uploadForm");
@@ -32,20 +47,20 @@
     const formData = new FormData(uForm);
     console.log(formData.keys());
 
-    fetch('http://127.0.0.1:8787', {
+    fetch('127.0.0.1:8787', {
       method: 'PUT',
       // headers: {
       //   'Content-Type': 'multipart/form-data'
       // },
       body: formData
     })
-        .then((response) => response.json())
-        .then((result) => {
-          console.log('Success:', result);
-        })
-        .catch((error) => {
-          console.error('Error:', error);
-        });
+            .then((response) => response.json())
+            .then((result) => {
+              console.log('Success:', result);
+            })
+            .catch((error) => {
+              console.error('Error:', error);
+            });
 
   });
 
@@ -57,19 +72,20 @@
     console.log(formData.get('id'));
 
     fetch(`http://127.0.0.1:8787/${formData.get('id')}`)
-        .then((response) => console.log(response))
-        .then((blob) => {
-          console.log(blob);
-          let a = document.createElement('a');
-          a.href = window.URL.createObjectURL(blob);
-          a.download = "FILENAME";
-          a.click();
-        })
-        .catch((error) => {
-          console.error('Error:', error);
-        });
+            .then((response) => console.log(response))
+            .then((blob) => {
+              console.log(blob);
+              let a = document.createElement('a');
+              a.href = window.URL.createObjectURL(blob);
+              a.download = "FILENAME";
+              a.click();
+            })
+            .catch((error) => {
+              console.error('Error:', error);
+            });
 
   });
 </script>
+
 </body>
 </html>

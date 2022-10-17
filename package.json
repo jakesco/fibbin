@@ -6,7 +6,8 @@
     "wrangler": "^2.1.11"
   },
   "scripts": {
-    "serve": "python -m http.server --directory=public/ 3000"
+    "serve": "python -m http.server --directory=public/ 3000",
+    "preview": "npx wrangler pages dev public --kv=KV_FIBBIN --r2=R2_FIBBIN"
   },
   "dependencies": {
     "uuid": "^9.0.0"
