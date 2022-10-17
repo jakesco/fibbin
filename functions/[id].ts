@@ -22,7 +22,7 @@ function html_bucket(id: string, name: string, expires: string) {
   <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css">
   <script defer src="https://unpkg.com/alpinejs@3.10.4/dist/cdn.min.js"></script>
 
-  <title>Fibbin | Get File</title>
+  <title>Fibbin | Bucket</title>
 </head>
 
 <body>
