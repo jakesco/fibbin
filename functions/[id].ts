@@ -11,7 +11,7 @@ interface Env {
     BUCKET: R2Bucket;
 }
 
-function html_bucket(id: string, name: string, expires: Date) {
+function html_bucket(id: string, name: string, expires: string) {
     return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -34,7 +34,7 @@ function html_bucket(id: string, name: string, expires: Date) {
   <section>
       <a href="/"><- home</a>
   </section>
-  <strong style="color: red;">This bucket will be deleted on ${expires.toTimeString()}</strong>
+  <strong style="color: red;">This bucket will be deleted on <span x-data x-text="(new Date('${expires}')).toTimeString()"></span></strong>
   <article style="margin-top: 1rem;">
     <h2>${name}</h2>
     <a role="button" href="./${id}/download" download="${name}">Download</a>
@@ -78,7 +78,7 @@ export async function onRequestGet(context: any) {
     const meta_response: FileMetadata | null = await env.STORE.get(key, { type: "json"});
 
     if (meta_response) {
-        const html = html_bucket(key, meta_response.name, new Date(meta_response.expires));
+        const html = html_bucket(key, meta_response.name, meta_response.expires);
         return new Response(html, {
             headers: {
                 'Content-Type': 'text/html;charset=UTF-8',
