@@ -16,6 +16,10 @@ $ git submodule update
 ```
 to pull the latest `fibbin-cleaup` code.
 
+> Note: building submodules fails on cloudflare pages.
+> I'm removing the submodule for now until this issue is resolved.
+> In the mean time, develop the cron job separately.
+
 Cloudflare workers are managed using `wrangler`.
 
 Use `wrangler whoami` to get your account ID.
