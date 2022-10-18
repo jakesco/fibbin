@@ -19,13 +19,36 @@
     <h2>Upload a file and get a link to share with anyone.</h2>
   </hgroup>
 
-  <article x-data x-show="$store.link.url === undefined">
+  <article x-data="{busy: false}" x-show="$store.link.url === undefined">
     <h3>Select a file to upload</h3>
-    <form id="uploadForm" enctype="multipart/form-data" x-data @submit.prevent @submit="uploadFile()">
+    <form id="uploadForm" enctype="multipart/form-data" @submit.prevent @submit="busy = true; uploadFile(); busy = false;">
       <div>
         <input name="file" type="file">
+        <fieldset>
+          <legend>Storage Duration</legend>
+          <label for="1">
+            <input type="radio" id="1" name="size" value="1" checked>
+            1 Hour
+          </label>
+          <label for="6">
+            <input type="radio" id="6" name="size" value="6">
+            6 Hours
+          </label>
+          <label for="12">
+            <input type="radio" id="12" name="size" value="12">
+            12 Hours
+          </label>
+          <label for="24">
+            <input type="radio" id="24" name="size" value="24">
+            24 Hours
+          </label>
+          <label for="-1">
+            <input type="radio" id="-1" name="size" value="-1" disabled>
+            Burn after reading
+          </label>
+        </fieldset>
       </div>
-      <button type="submit">Upload</button>
+      <button type="submit" :aria-busy="busy" :disabled="busy">Upload</button>
     </form>
   </article>
 

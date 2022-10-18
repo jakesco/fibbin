@@ -10,10 +10,12 @@
 
 import { v4 as uuidv4 } from 'uuid';
 
-const HOURS_6 = 6 * 60 * 60 * 1000;
-
 interface env {
     BUCKET: R2Bucket;
+}
+
+function hours_to_ms(hours: number) {
+    return hours * 60 * 60 * 1000;
 }
 
 export async function onRequestPost(context: any) {
@@ -24,7 +26,7 @@ export async function onRequestPost(context: any) {
 
     const key = uuidv4();
     let now = new Date();
-    const expires = new Date(now.getTime() + HOURS_6).toISOString();
+    const expires = new Date(now.getTime() + hours_to_ms(1)).toISOString();
     const options: R2PutOptions = {
         customMetadata: {
             'name': file.name,
