@@ -23,7 +23,7 @@
     <h3>Select a file to upload</h3>
     <form id="uploadForm" enctype="multipart/form-data" @submit.prevent @submit="busy = true; uploadFile(); busy = false;">
       <div>
-        <input name="file" type="file" required>
+        <input id="fileField" name="file" type="file" @change="validateFilesize()" required>
         <fieldset>
           <legend>Storage Duration</legend>
           <label for="1">
@@ -44,7 +44,7 @@
           </label>
           <label for="-1">
             <input type="radio" id="-1" name="expires" value="-1" disabled>
-            Burn after reading
+            🔥 Burn after reading
           </label>
         </fieldset>
       </div>
@@ -106,6 +106,14 @@
     linkText.select()
     linkText.setSelectionRange(0, 999999);
     navigator.clipboard.writeText(linkText.value);
+  }
+
+  function validateFilesize() {
+    const fileField = document.getElementById("fileField");
+    if (fileField.files[0].size > 5_242_880) { // 5 MB
+      alert("File cannot be larger than 5MB.");
+      fileField.value = "";
+    }
   }
 </script>
 </body>

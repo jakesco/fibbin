@@ -21,26 +21,26 @@ function hours_to_ms(hours: number) {
 // Expects https://example.com/{duration}/{filename} and a Readable stream as body.
 export async function onRequestPost(context: any) {
     const env: Env = context.env;
+    const request: Request = context.request
 
     const args = context.params.args.slice(0, 2);
     const duration = args[0];
     const name = args[1];
     const expires_in = Math.min(24, duration);
 
-    const file: Blob = context.request.body
-
     const key = uuidv4();
     let now = new Date();
     const expires = new Date(now.getTime() + hours_to_ms(expires_in)).toISOString();
 
     const options: R2PutOptions = {
+        httpMetadata: request.headers,
         customMetadata: {
             'name': name,
             'expires': expires,
         }
     }
 
-    const status = await env.BUCKET.put(key, file, options)
+    const status = await env.BUCKET.put(key, request.body, options)
         .then((response) => {return response;})
         .catch((error) => {console.error(error);});
 

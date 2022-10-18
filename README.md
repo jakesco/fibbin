@@ -14,6 +14,8 @@ To get started, run `npm install` in the root directory.
 
 You can run `npm run workers` to start the cloudflare workers in development mode.
 
+Point your browser to `http://localhost:8788` to interact with the app.
+
 > Hint: Use `wrangler whoami` to get your account ID.
 
 ## Fibbin Clean Up
