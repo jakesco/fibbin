@@ -1,13 +1,4 @@
-interface FileMetadata {
-    created_at: Date;
-    expires: Date;
-    name: string;
-    type: string;
-    size: number;
-}
-
 interface Env {
-    STORE: KVNamespace;
     BUCKET: R2Bucket;
 }
 
@@ -75,21 +66,24 @@ function html_404(id: string) {
 export async function onRequestGet(context: any) {
     const key = context.params.id;
     const env: Env = context.env;
-    const meta_response: FileMetadata | null = await env.STORE.get(key, { type: "json"});
+    const file_meta: R2Object | null = await env.BUCKET.head(key);
 
-    if (meta_response) {
-        const html = html_bucket(key, meta_response.name, meta_response.expires);
-        return new Response(html, {
+    if (file_meta === null) {
+        return new Response(html_404(key), {
+            status: 404,
             headers: {
                 'Content-Type': 'text/html;charset=UTF-8',
             },
         });
     }
-    return new Response(html_404(key), {
-        status: 404,
+    console.log(file_meta);
+
+    const {name, expires} = file_meta.customMetadata;
+
+    const html = html_bucket(key, name, expires);
+    return new Response(html, {
         headers: {
             'Content-Type': 'text/html;charset=UTF-8',
         },
     });
-
 }

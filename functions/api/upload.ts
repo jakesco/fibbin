@@ -10,16 +10,9 @@
 
 import { v4 as uuidv4 } from 'uuid';
 
-interface FileMetadata {
-    created_at: Date;
-    expires: Date;
-    name: string;
-    type: string;
-    size: number;
-}
+const HOURS_6 = 6 * 60 * 60 * 1000;
 
 interface env {
-    STORE: KVNamespace;
     BUCKET: R2Bucket;
 }
 
@@ -29,22 +22,18 @@ export async function onRequestPost(context: any) {
     const formData = await context.request.formData();
     const file = formData.get('file');
 
-    let now = new Date();
-
     const key = uuidv4();
-    const meta_data: FileMetadata = {
-        created_at: now,
-        expires: new Date(now.getTime() + 6 * 60 * 60 * 1000),
-        name: file.name,
-        type: file.type,
-        size: file.size
-    };
-    const value = JSON.stringify(meta_data);
-    console.log(value);
+    let now = new Date();
+    const expires = new Date(now.getTime() + HOURS_6).toISOString();
+    const options: R2PutOptions = {
+        customMetadata: {
+            'name': file.name,
+            'expires': expires,
+        }
+    }
+    console.log("Meta: ", options);
 
-    await env.STORE.put(key, value);
-    await env.BUCKET.put(key, file);
-
+    await env.BUCKET.put(key, file, options);
     return new Response(JSON.stringify({"url": key}));
 }
 
