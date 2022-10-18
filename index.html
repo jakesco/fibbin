@@ -78,14 +78,12 @@
   function uploadFile() {
     const form = document.getElementById('uploadForm');
     const formData = new FormData(form);
+    const duration = formData.get('expires')
     const file = formData.get('file');
-    formData.append('name', file.name);
-    formData.append('type', file.type);
-    formData.append('size', file.size.toString());
 
-    fetch("./api/upload", {
+    fetch(`./upload/${duration}/${file.name}`, {
       method: 'PUT',
-      body: formData
+      body: file
     })
       .then((response) => response.json())
       .then((result) => {
