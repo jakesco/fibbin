@@ -5,7 +5,7 @@ Temporary file sharing.
 ## Development
 
 This project uses a scheduled worker to cleanup expired R2 files.
-This worker is in the `fibbin-cleanup` module and must be deployed separately.
+This worker is in the `cron` module from [fibbin-cleanup](https://github.com/jakesco/fibbin-cleanup) and must be deployed separately.
 
 Clone with `git clone --recurse-submodules <url>` to work on the cron function.
 
