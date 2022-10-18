@@ -27,23 +27,23 @@
         <fieldset>
           <legend>Storage Duration</legend>
           <label for="1">
-            <input type="radio" id="1" name="size" value="1" checked>
+            <input type="radio" id="1" name="expires" value="1" checked>
             1 Hour
           </label>
           <label for="6">
-            <input type="radio" id="6" name="size" value="6">
+            <input type="radio" id="6" name="expires" value="6">
             6 Hours
           </label>
           <label for="12">
-            <input type="radio" id="12" name="size" value="12">
+            <input type="radio" id="12" name="expires" value="12">
             12 Hours
           </label>
           <label for="24">
-            <input type="radio" id="24" name="size" value="24">
+            <input type="radio" id="24" name="expires" value="24">
             24 Hours
           </label>
           <label for="-1">
-            <input type="radio" id="-1" name="size" value="-1" disabled>
+            <input type="radio" id="-1" name="expires" value="-1" disabled>
             Burn after reading
           </label>
         </fieldset>
@@ -74,7 +74,7 @@
 
   function uploadFile() {
     const form = document.getElementById('uploadForm');
-    const formData = new FormData(form)
+    const formData = new FormData(form);
 
     fetch("./api/upload", {
       method: 'PUT',

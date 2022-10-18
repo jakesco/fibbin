@@ -22,11 +22,13 @@ export async function onRequestPost(context: any) {
     const env: env = context.env;
 
     const formData = await context.request.formData();
+    const expires_in = Math.min(24, formData.get('expires'));
+    console.log(expires_in);
     const file = formData.get('file');
 
     const key = uuidv4();
     let now = new Date();
-    const expires = new Date(now.getTime() + hours_to_ms(1)).toISOString();
+    const expires = new Date(now.getTime() + hours_to_ms(expires_in)).toISOString();
     const options: R2PutOptions = {
         customMetadata: {
             'name': file.name,
@@ -35,7 +37,17 @@ export async function onRequestPost(context: any) {
     }
     console.log("Meta: ", options);
 
-    await env.BUCKET.put(key, file, options);
+    const status = await env.BUCKET.put(key, file, options)
+        .then((response) => {return response;})
+        .catch((error) => {console.error(error); return error;});
+
+    console.log(typeof status);
+
+    if (typeof status !== 'object') {
+        return new Response(JSON.stringify({"error": status}), {
+            status: 400
+        });
+    }
     return new Response(JSON.stringify({"url": key}));
 }
 
