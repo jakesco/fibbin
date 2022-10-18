@@ -1,2 +1,2 @@
 compatibility_date = "2022-10-16"
-compatibility_flags = [ "formdata_parser_supports_files" ]
+#compatibility_flags = [ "formdata_parser_supports_files" ]
