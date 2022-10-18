@@ -23,7 +23,7 @@
     <h3>Select a file to upload</h3>
     <form id="uploadForm" enctype="multipart/form-data" @submit.prevent @submit="busy = true; uploadFile(); busy = false;">
       <div>
-        <input name="file" type="file">
+        <input name="file" type="file" required>
         <fieldset>
           <legend>Storage Duration</legend>
           <label for="1">
@@ -53,7 +53,10 @@
   </article>
 
   <article x-cloak x-data="{'copied': false}" x-show="$store.link.url !== undefined" x-transition>
-    <p>Your file will be available at the following url. Files are automatically deleted after 1 hour.</p>
+    <p>Your file will be available at the following url.</p>
+    <div>
+      <a class="contrast" :href="$store.link.url">Go to Bucket -></a>
+    </div>
     <input id="fileLink" type="text" :value="$store.link.url" readonly>
     <div class="grid">
       <button @click="copyLink(); copied = true; setTimeout(() => copied = false, 3000)">Copy Link</button>
@@ -75,6 +78,10 @@
   function uploadFile() {
     const form = document.getElementById('uploadForm');
     const formData = new FormData(form);
+    const file = formData.get('file');
+    formData.append('name', file.name);
+    formData.append('type', file.type);
+    formData.append('size', file.size.toString());
 
     fetch("./api/upload", {
       method: 'PUT',
@@ -82,7 +89,12 @@
     })
       .then((response) => response.json())
       .then((result) => {
-        Alpine.store('link').url = window.location.origin + '/' + result.url;
+        if (result.url !== undefined) {
+          Alpine.store('link').url = window.location.origin + '/' + result.url;
+        } else {
+          alert(result.error);
+        }
+
       })
       .catch((error) => {
         alert("File upload failed.");

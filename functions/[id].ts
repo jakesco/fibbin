@@ -76,7 +76,6 @@ export async function onRequestGet(context: any) {
             },
         });
     }
-    console.log(file_meta);
 
     const {name, expires} = file_meta.customMetadata;
 

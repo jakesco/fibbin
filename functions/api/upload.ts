@@ -10,7 +10,7 @@
 
 import { v4 as uuidv4 } from 'uuid';
 
-interface env {
+interface Env {
     BUCKET: R2Bucket;
 }
 
@@ -19,11 +19,10 @@ function hours_to_ms(hours: number) {
 }
 
 export async function onRequestPost(context: any) {
-    const env: env = context.env;
+    const env: Env = context.env;
 
     const formData = await context.request.formData();
     const expires_in = Math.min(24, formData.get('expires'));
-    console.log(expires_in);
     const file = formData.get('file');
 
     const key = uuidv4();
@@ -35,17 +34,14 @@ export async function onRequestPost(context: any) {
             'expires': expires,
         }
     }
-    console.log("Meta: ", options);
 
     const status = await env.BUCKET.put(key, file, options)
         .then((response) => {return response;})
-        .catch((error) => {console.error(error); return error;});
-
-    console.log(typeof status);
+        .catch((error) => {console.error(error);});
 
     if (typeof status !== 'object') {
-        return new Response(JSON.stringify({"error": status}), {
-            status: 400
+        return new Response(JSON.stringify({"error": "File upload failed."}), {
+            status: 500
         });
     }
     return new Response(JSON.stringify({"url": key}));

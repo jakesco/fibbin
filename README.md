@@ -1,5 +1,9 @@
 # Fibbin'
 
+> Note: Since there is currently no way to set compatability flags in pages functions,
+> I'm waiting on `compatibility_flags = [ "formdata_parser_supports_files" ]` to become widely available
+> It is currently in `wrangler@beta`.
+
 Temporary file sharing.
 
 ## Development
@@ -25,5 +29,3 @@ Cloudflare workers are managed using `wrangler`.
 Use `wrangler whoami` to get your account ID.
 
 Use `npm run preview` to enable testing workers.
-
-
