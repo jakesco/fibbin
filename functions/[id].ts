@@ -23,14 +23,38 @@ function html_bucket(id: string, name: string, expires: string) {
     <h2>${id}</h2>
   </hgroup>
   <section>
-      <a href="/"><- home</a>
+    <a href="/"><- home</a>
   </section>
-  <strong style="color: red;">This bucket will be deleted on <span x-data x-text="(new Date('${expires}')).toTimeString()"></span></strong>
-  <article style="margin-top: 1rem;">
-    <h2>${name}</h2>
-    <a role="button" href="./${id}/download" download="${name}">Download</a>
-  </article>
-  </main>
+  <section>
+    <table>
+    <thead>
+      <tr>
+        <th>File</th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>${name}</td>
+        <td>
+          <a role="button" href="./${id}/download" download="${name}">Download</a>
+        </td>
+        <td>
+          <a role="button" class="outline contrast" href="./${id}/delete">Delete</a>
+        </td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="3">
+          <strong style="color: red;">This bucket will be deleted on <span x-data x-text="(new Date('${expires}')).toLocaleString('en-US')"></span></strong>
+        </td>
+      </tr>
+    </tfoot>
+    </table>
+  </section>
+</main>
 </body>
 </html>
 `;
@@ -56,7 +80,10 @@ function html_404(id: string) {
     <h1>404: Fibbin bucket not found</h1>
     <h2 style="color: red;">${id}</h2>
   </hgroup>
-  <p>This bucket may have expired.</p>
+  <p>This bucket does not exist or has expired.</p>
+  <section>
+      <a href="/"><- home</a>
+  </section>
   </main>
 </body>
 </html>

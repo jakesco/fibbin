@@ -6,7 +6,7 @@ export async function onRequestGet(context: any) {
     const env: Env = context.env;
     const key = context.params.id;
 
-    const object: R2Object | null = await env.BUCKET.get(key);
+    const object: R2ObjectBody | null = await env.BUCKET.get(key);
 
     if (object === null) {
         return new Response('Object Not Found', { status: 404 });

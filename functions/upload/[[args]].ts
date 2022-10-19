@@ -18,7 +18,7 @@ function hours_to_ms(hours: number) {
     return hours * 60 * 60 * 1000;
 }
 
-// Expects https://example.com/{duration}/{filename} and a Readable stream as body.
+// Expects https://example.com/{duration}/{filename} and a Blob as body.
 export async function onRequestPost(context: any) {
     const env: Env = context.env;
     const request: Request = context.request
