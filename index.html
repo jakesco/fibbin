@@ -106,7 +106,7 @@
 
   function validateFilesize() {
     const fileField = document.getElementById("fileField");
-    if (fileField.files[0].size > 5_242_880) { // 5 MB
+    if (fileField.files[0].size > 104_857_600) { // 100 MB
       alert("File cannot be larger than 5MB.");
       fileField.value = "";
     }
